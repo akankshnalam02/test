@@ -1,0 +1,666 @@
+Here is the simplified C code for Binary Search with recursion:
+
+Simplified Code:
+c
+Copy
+#include <stdio.h>
+
+int search(int arr[], int low, int high, int key) {
+    if (low > high) return -1;
+    
+    int mid = (low + high) / 2;
+    
+    if (arr[mid] == key) return mid;
+    if (arr[mid] > key) return search(arr, low, mid - 1, key);
+    
+    return search(arr, mid + 1, high, key);
+}
+
+int main() {
+    int arr[] = {2, 3, 4, 10, 40};
+    int n = 5, key = 10;
+    
+    int result = search(arr, 0, n - 1, key);
+    
+    if (result == -1)
+        printf("Not found\n");
+    else
+        printf("Found at index %d\n", result);
+
+    return 0;
+}
+Output:
+pgsql
+Copy
+Found at index 3
+
+Here is the simplified C code for Binary Search without recursion:
+
+Simplified Code:
+c
+Copy
+#include <stdio.h>
+
+int search(int arr[], int n, int key) {
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        
+        if (arr[mid] == key) return mid;
+        else if (arr[mid] < key) low = mid + 1;
+        else high = mid - 1;
+    }
+    
+    return -1;
+}
+
+int main() {
+    int arr[] = {2, 3, 4, 10, 40};
+    int n = 5, key = 10;
+    
+    int result = search(arr, n, key);
+    
+    if (result == -1)
+        printf("Not found\n");
+    else
+        printf("Found at index %d\n", result);
+
+    return 0;
+}
+Output:
+pgsql
+Copy
+Found at index 3
+
+Here is the simplified C code for Merge Sort:
+
+Simplified Code:
+c
+Copy
+#include <stdio.h>
+
+void merge(int arr[], int l, int m, int r) {
+    int i = l, j = m + 1, k = 0;
+    int temp[r - l + 1];
+    
+    while (i <= m && j <= r) {
+        if (arr[i] < arr[j]) temp[k++] = arr[i++];
+        else temp[k++] = arr[j++];
+    }
+    
+    while (i <= m) temp[k++] = arr[i++];
+    while (j <= r) temp[k++] = arr[j++];
+    
+    for (i = l, k = 0; i <= r; i++, k++) arr[i] = temp[k];
+}
+
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = (l + r) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
+}
+
+void printArray(int arr[], int size) {
+    for (int i = 0; i < size; i++) printf("%d ", arr[i]);
+    printf("\n");
+}
+
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Given array:\n");
+    printArray(arr, n);
+    
+    mergeSort(arr, 0, n - 1);
+    
+    printf("\nSorted array:\n");
+    printArray(arr, n);
+    
+    return 0;
+}
+Output:
+php
+Copy
+Given array:
+12 11 13 5 6 7 
+
+Sorted array:
+5 6 7 11 12 13 
+
+
+Here is the simplified C code for Quick Sort:
+
+Simplified Code:
+c
+Copy
+#include <stdio.h>
+
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[low], i = low, j = high;
+    while (i < j) {
+        while (arr[i] <= pivot && i < high) i++;
+        while (arr[j] > pivot && j > low) j--;
+        if (i < j) swap(&arr[i], &arr[j]);
+    }
+    swap(&arr[low], &arr[j]);
+    return j;
+}
+
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+int main() {
+    int arr[] = {19, 17, 15, 12, 16, 18, 4, 11, 13};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    
+    printf("Original array: ");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    
+    quickSort(arr, 0, n - 1);
+    
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+    
+    return 0;
+}
+Output:
+php
+Copy
+Original array: 19 17 15 12 16 18 4 11 13 
+Sorted array: 4 11 12 13 15 16 17 18 19
+
+Here is the simplified C code for Minimum-cost spanning tree using Greedy Method (Kruskal's Algorithm):
+
+Simplified Code:
+c
+Copy
+#include <stdio.h>
+#include <stdlib.h>
+
+int compare(const void *a, const void *b) {
+    return ((int(*)[3])a)[2] - ((int(*)[3])b)[2];
+}
+
+void makeSet(int parent[], int rank[], int n) {
+    for (int i = 0; i < n; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+}
+
+int findParent(int parent[], int i) {
+    if (parent[i] != i) {
+        parent[i] = findParent(parent, parent[i]);
+    }
+    return parent[i];
+}
+
+void unionSets(int parent[], int rank[], int u, int v) {
+    int rootU = findParent(parent, u);
+    int rootV = findParent(parent, v);
+    
+    if (rootU != rootV) {
+        if (rank[rootU] < rank[rootV]) parent[rootU] = rootV;
+        else if (rank[rootU] > rank[rootV]) parent[rootV] = rootU;
+        else {
+            parent[rootV] = rootU;
+            rank[rootU]++;
+        }
+    }
+}
+
+void kruskal(int edges[][3], int n) {
+    qsort(edges, n, sizeof(edges[0]), compare);
+    
+    int parent[n], rank[n];
+    makeSet(parent, rank, n);
+    
+    int minCost = 0;
+    printf("Edges in the MST:\n");
+    
+    for (int i = 0; i < n; i++) {
+        int u = edges[i][0], v = edges[i][1], weight = edges[i][2];
+        
+        if (findParent(parent, u) != findParent(parent, v)) {
+            unionSets(parent, rank, u, v);
+            minCost += weight;
+            printf("%d -- %d == %d\n", u, v, weight);
+        }
+    }
+    
+    printf("Minimum Cost Spanning Tree: %d\n", minCost);
+}
+
+int main() {
+    int edges[5][3] = {
+        {0, 1, 10},
+        {0, 2, 6},
+        {0, 3, 5},
+        {1, 3, 15},
+        {2, 3, 4}
+    };
+    
+    kruskal(edges, 5);
+    
+    return 0;
+}
+Output:
+lua
+Copy
+Edges in the MST:
+2 -- 3 == 4
+0 -- 3 == 5
+0 -- 1 == 10
+Minimum Cost Spanning Tree: 19
+
+Here is the simplified version of the Dijkstra's algorithm without comments:
+
+Simplified Code:
+c
+Copy
+#include <limits.h>
+#include <stdbool.h>
+#include <stdio.h>
+#define V 9
+
+int minDistance(int dist[], bool sptSet[]) {
+    int min = INT_MAX, min_index;
+    for (int v = 0; v < V; v++)
+        if (sptSet[v] == false && dist[v] <= min)
+            min = dist[v], min_index = v;
+    return min_index;
+}
+
+void printSolution(int dist[]) {
+    printf("Vertex \t\t Distance from Source\n");
+    for (int i = 0; i < V; i++)
+        printf("%d \t\t\t\t %d\n", i, dist[i]);
+}
+
+void dijkstra(int graph[V][V], int src) {
+    int dist[V];
+    bool sptSet[V];
+    for (int i = 0; i < V; i++)
+        dist[i] = INT_MAX, sptSet[i] = false;
+    dist[src] = 0;
+    for (int count = 0; count < V - 1; count++) {
+        int u = minDistance(dist, sptSet);
+        sptSet[u] = true;
+        for (int v = 0; v < V; v++)
+            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v])
+                dist[v] = dist[u] + graph[u][v];
+    }
+    printSolution(dist);
+}
+
+int main() {
+    int graph[V][V] = { 
+        { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
+        { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+        { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
+        { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
+        { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+        { 0, 0, 4, 14, 10, 0, 2, 0, 0 },
+        { 0, 0, 0, 0, 0, 2, 0, 1, 6 },
+        { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+        { 0, 0, 2, 0, 0, 0, 6, 7, 0 }
+    };
+    dijkstra(graph, 0);
+    return 0;
+}
+Output:
+csharp
+Copy
+Vertex 	     Distance from Source
+0 		         0
+1 		         4
+2 		         12
+3 		         19
+4 		         21
+5 		         11
+6 		         9
+7 		         8
+8 		         14
+
+Here is the Traveling Salesperson Problem (TSP) using Dynamic Programming as per your request. The implementation uses memoization to optimize the recursive approach.
+
+Code:
+c
+Copy
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX 9999
+int n = 4;
+int distan[20][20] = {
+    {0, 22, 26, 30},
+    {30, 0, 45, 35},
+    {25, 45, 0, 60},
+    {30, 35, 40, 0}
+};
+int DP[32][8];
+
+int TSP(int mark, int position) {
+    int completed_visit = (1 << n) - 1;
+    
+    // If all cities have been visited, return the distance to the starting city
+    if (mark == completed_visit) {
+        return distan[position][0];
+    }
+
+    // If this state has already been computed, return the stored result
+    if (DP[mark][position] != -1) {
+        return DP[mark][position];
+    }
+
+    int answer = MAX;
+
+    // Try to go to each city that hasn't been visited yet
+    for (int city = 0; city < n; city++) {
+        if ((mark & (1 << city)) == 0) {
+            int newAnswer = distan[position][city] + TSP(mark | (1 << city), city);
+            answer = (answer < newAnswer) ? answer : newAnswer;
+        }
+    }
+
+    // Store the result in the DP table
+    return DP[mark][position] = answer;
+}
+
+int main() {
+    // Initialize the DP table with -1 (indicating unvisited states)
+    for (int i = 0; i < (1 << n); i++) {
+        for (int j = 0; j < n; j++) {
+            DP[i][j] = -1;
+        }
+    }
+
+    // Start the TSP algorithm with the first city visited (position 0)
+    printf("Minimum Distance Travelled -> %d\n", TSP(1, 0));
+    return 0;
+}
+
+N-Queens Problem (Backtracking Implementation)
+c
+Copy
+#define N 4
+#include <stdbool.h>
+#include <stdio.h>
+
+void printSolution(int board[N][N]) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (board[i][j])
+                printf("Q ");
+            else
+                printf(". ");
+        }
+        printf("\n");
+    }
+}
+
+bool isSafe(int board[N][N], int row, int col) {
+    int i, j;
+    
+    // Check the current row on the left side
+    for (i = 0; i < col; i++)
+        if (board[row][i])
+            return false;
+
+    // Check upper diagonal on the left side
+    for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j])
+            return false;
+
+    // Check lower diagonal on the left side
+    for (i = row, j = col; j >= 0 && i < N; i++, j--)
+        if (board[i][j])
+            return false;
+
+    return true;
+}
+
+bool solveNQUtil(int board[N][N], int col) {
+    if (col >= N) // All queens are placed
+        return true;
+
+    for (int i = 0; i < N; i++) {
+        if (isSafe(board, i, col)) {
+            board[i][col] = 1; // Place the queen
+            if (solveNQUtil(board, col + 1)) // Recur to place the rest of the queens
+                return true;
+            board[i][col] = 0; // Backtrack if the placement didn't work
+        }
+    }
+
+    return false; // No valid placement found
+}
+
+bool solveNQ() {
+    int board[N][N] = { { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 } };
+
+    if (solveNQUtil(board, 0) == false) {
+        printf("Solution does not exist\n");
+        return false;
+    }
+
+    printSolution(board);
+    return true;
+}
+
+int main() {
+    solveNQ();
+    return 0;
+}
+
+
+Graph Coloring Problem (Backtracking Implementation)
+c
+Copy
+#include <stdbool.h>
+#include <stdio.h>
+#define V 4
+
+void printSolution(int color[]);
+
+bool isSafe(int v, bool graph[V][V], int color[], int c)
+{
+    // Check if any adjacent vertex has the same color
+    for (int i = 0; i < V; i++)
+        if (graph[v][i] && c == color[i])
+            return false;
+    return true;
+}
+
+bool graphColoringUtil(bool graph[V][V], int m, int color[], int v)
+{
+    // If all vertices are assigned a color then return true
+    if (v == V)
+        return true;
+
+    // Consider the vertices one by one
+    for (int c = 1; c <= m; c++) {
+        // Check if it is safe to assign color c to vertex v
+        if (isSafe(v, graph, color, c)) {
+            color[v] = c;
+            // Recur to assign colors to the rest of the vertices
+            if (graphColoringUtil(graph, m, color, v + 1) == true)
+                return true;
+            // Backtrack if assigning color c doesn't lead to a solution
+            color[v] = 0;
+        }
+    }
+
+    // If no color can be assigned, return false
+    return false;
+}
+
+bool graphColoring(bool graph[V][V], int m)
+{
+    int color[V];
+    for (int i = 0; i < V; i++)
+        color[i] = 0;
+
+    // Start from the first vertex and try to color the graph
+    if (graphColoringUtil(graph, m, color, 0) == false) {
+        printf("Solution does not exist\n");
+        return false;
+    }
+
+    // If the solution is found, print the solution
+    printSolution(color);
+    return true;
+}
+
+void printSolution(int color[])
+{
+    printf("Solution Exists: Following are the assigned colors\n");
+    for (int i = 0; i < V; i++)
+        printf(" %d ", color[i]);
+    printf("\n");
+}
+
+int main()
+{
+    // Example graph with 4 vertices
+    bool graph[V][V] = {
+        { 0, 1, 1, 1 },
+        { 1, 0, 1, 0 },
+        { 1, 1, 0, 1 },
+        { 1, 0, 1, 0 }
+    };
+    
+    // m is the number of colors available
+    int m = 3; // 3 colors available
+
+    // Function call to solve the graph coloring problem
+    graphColoring(graph, m);
+
+    return 0;
+}
+
+
+KMP Algorithm (Simplified)
+c
+Copy
+#include <stdio.h>
+#include <string.h>
+
+void computeLPS(char *pattern, int M, int *lps) {
+    int len = 0, i = 1;
+    lps[0] = 0;
+    while (i < M) {
+        if (pattern[i] == pattern[len]) {
+            len++;
+            lps[i++] = len;
+        } else {
+            if (len != 0) 
+                len = lps[len - 1];
+            else
+                lps[i++] = 0;
+        }
+    }
+}
+
+void KMPSearch(char *text, char *pattern) {
+    int N = strlen(text), M = strlen(pattern);
+    int lps[M];
+    computeLPS(pattern, M, lps);
+    
+    int i = 0, j = 0;
+    while (i < N) {
+        if (pattern[j] == text[i]) {
+            i++;
+            j++;
+        }
+        if (j == M) {
+            printf("Pattern found at index %d\n", i - j);
+            j = lps[j - 1];
+        } else if (i < N && pattern[j] != text[i]) {
+            if (j != 0)
+                j = lps[j - 1];
+            else
+                i++;
+        }
+    }
+}
+
+int main() {
+    char text[] = "ABABDABACCAABDCDDEEPUABABCABAB";
+    char pattern[] = "DEEPU";
+    printf("Text: %s\n", text);
+    printf("Pattern: %s\n", pattern);
+    printf("Pattern matching using KMP algorithm:\n");
+    KMPSearch(text, pattern);
+    return 0;
+}
+
+
+
+Rabin-Karp Algorithm (Simplified)
+c
+Copy
+#include <stdio.h>
+#include <string.h>
+#define d 256
+#define q 101
+
+void RabinKarpSearch(char *text, char *pattern) {
+    int M = strlen(pattern);
+    int N = strlen(text);
+    int i, j, p = 0, t = 0, h = 1;
+
+    // Calculate h = pow(d, M-1) % q
+    for (i = 0; i < M - 1; i++)
+        h = (h * d) % q;
+
+    // Calculate initial hash values for pattern and text
+    for (i = 0; i < M; i++) {
+        p = (d * p + pattern[i]) % q;
+        t = (d * t + text[i]) % q;
+    }
+
+    // Search for the pattern in the text
+    for (i = 0; i <= N - M; i++) {
+        if (p == t) { // If hashes match, check character by character
+            for (j = 0; j < M; j++) {
+                if (text[i + j] != pattern[j]) break;
+            }
+            if (j == M) printf("Pattern found at index %d\n", i);
+        }
+
+        // Calculate hash for next window of text
+        if (i < N - M) {
+            t = (d * (t - text[i] * h) + text[i + M]) % q;
+            if (t < 0) t += q;
+        }
+    }
+}
+
+int main() {
+    char text[] = "ABAAABDCDLUFFYABAABAB";
+    char pattern[] = "LUFFY";
+    printf("Text: %s\n", text);
+    printf("Pattern: %s\n", pattern);
+    printf("Pattern matching using Rabin-Karp algorithm:\n");
+    RabinKarpSearch(text, pattern);
+    return 0;
+}
