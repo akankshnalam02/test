@@ -1,0 +1,1258 @@
+*********************Binary Search(With Recursion)**********************************
+#include <stdio.h>
+
+// Function to perform binary search
+int binarySearch(int arr[], int low, int high, int key) {
+    if (high >= low) {
+        int mid = low + (high - low) / 2;
+
+        // Check if the key is present at the mid index
+        if (arr[mid] == key)
+            return mid;
+
+        // If the key is smaller than the mid element, search the left half
+        if (arr[mid] > key)
+            return binarySearch(arr, low, mid - 1, key);
+
+        // Otherwise, search the right half
+        return binarySearch(arr, mid + 1, high, key);
+    }
+    return -1; // Key not found
+}
+
+int main() {
+    int arr[] = {2, 3, 4, 10, 40};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int key = 10;
+
+    int result = binarySearch(arr, 0, n - 1, key);
+    
+    if (result == -1) {
+        printf("Element is not present in array\n");
+    } else {
+        printf("Element is present at index %d\n", result);
+    }
+    
+    return 0;
+}
+**********************Binary Search(Without Recursion)**********************************
+#include <stdio.h>
+
+// Iterative Binary Search Function
+int binarySearch(int arr[], int n, int key) {
+    int low = 0, high = n - 1;
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        // Check if the key is present at the mid index
+        if (arr[mid] == key)
+            return mid;
+
+        // If key is greater, ignore the left half
+        else if (arr[mid] < key)
+            low = mid + 1;
+
+        // If key is smaller, ignore the right half
+        else
+            high = mid - 1;
+    }
+    
+    return -1; // Key not found
+}
+
+int main() {
+    int arr[] = {2, 3, 4, 10, 40};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int key = 10;
+
+    int result = binarySearch(arr, n, key);
+
+    if (result != -1) {
+        printf("Element is present at index %d\n", result);
+    } else {
+        printf("Element is not present in array\n");
+    }
+
+    return 0;
+}
+*************************************Merge Sort*************************************
+#include <stdio.h>
+#include <stdlib.h>
+
+// Merges two subarrays of arr[].
+void merge(int arr[], int l, int m, int r) {
+    int i, j, k;
+    int n1 = m - l + 1; // Size of left subarray
+    int n2 = r - m;      // Size of right subarray
+
+    int L[n1], R[n2]; // Temporary arrays
+
+    // Copy data to temporary arrays L[] and R[]
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+
+    // Merge the temporary arrays back into arr[l..r]
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy the remaining elements of L[], if any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // Copy the remaining elements of R[], if any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+// Merge Sort function
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+
+        mergeSort(arr, l, m);    // Sort the first half
+        mergeSort(arr, m + 1, r); // Sort the second half
+
+        merge(arr, l, m, r); // Merge the sorted halves
+    }
+}
+
+// Utility function to print an array
+void printArray(int arr[], int size) {
+    for (int i = 0; i < size; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+// Main function
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int arr_size = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Given array is:\n");
+    printArray(arr, arr_size);
+
+    mergeSort(arr, 0, arr_size - 1);
+
+    printf("\nSorted array is:\n");
+    printArray(arr, arr_size);
+
+    return 0;
+}
+*************************************Quick Sort**************************************
+#include <stdio.h>
+
+// Function to swap two elements
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Partition function
+int partition(int arr[], int low, int high) {
+    int pivot = arr[low]; // Choosing the first element as the pivot
+    int i = low;
+    int j = high;
+
+    while (i < j) {
+        // Increment i while arr[i] <= pivot
+        while (arr[i] <= pivot && i <= high - 1) {
+            i++;
+        }
+        // Decrement j while arr[j] > pivot
+        while (arr[j] > pivot && j >= low + 1) {
+            j--;
+        }
+        // Swap elements if i is still less than j
+        if (i < j) {
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    // Swap the pivot element with arr[j] to put pivot in the correct place
+    swap(&arr[low], &arr[j]);
+    return j; // Return the partition index
+}
+
+// Quick Sort function
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int partitionIndex = partition(arr, low, high);
+        quickSort(arr, low, partitionIndex - 1); // Sort left subarray
+        quickSort(arr, partitionIndex + 1, high); // Sort right subarray
+    }
+}
+
+// Main function
+int main() {
+    int arr[] = {19, 17, 15, 12, 16, 18, 4, 11, 13};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Original array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    quickSort(arr, 0, n - 1);
+
+    printf("\nSorted array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    
+    return 0;
+}
+*************************************Prims Algorithm************************************
+#include <stdio.h>
+#include <limits.h>
+
+#define V 100  // Max number of vertices
+
+int minKey(int key[], int mstSet[], int n) {
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < n; v++)
+        if (mstSet[v] == 0 && key[v] < min)
+            min = key[v], min_index = v;
+
+    return min_index;
+}
+
+void printMST(int parent[], int graph[V][V], int n) {
+    int totalCost = 0;
+    printf("Edge \tWeight\n");
+    for (int i = 1; i < n; i++) {
+        printf("%d - %d \t%d \n", parent[i], i, graph[i][parent[i]]);
+        totalCost += graph[i][parent[i]];
+    }
+    printf("Total cost of MST: %d\n", totalCost);
+}
+
+void primMST(int graph[V][V], int n) {
+    int parent[V];   // Array to store constructed MST
+    int key[V];      // Key values to pick minimum weight edge
+    int mstSet[V];   // To represent set of vertices included in MST
+
+    for (int i = 0; i < n; i++)
+        key[i] = INT_MAX, mstSet[i] = 0;
+
+    key[0] = 0;       // First vertex is always included in MST
+    parent[0] = -1;   // First node is root of MST
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = minKey(key, mstSet, n);
+        mstSet[u] = 1;
+
+        for (int v = 0; v < n; v++)
+            if (graph[u][v] && mstSet[v] == 0 && graph[u][v] < key[v])
+                parent[v] = u, key[v] = graph[u][v];
+    }
+
+    printMST(parent, graph, n);
+}
+
+int main() {
+    int n;
+    int graph[V][V];
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter the adjacency matrix (0 if no edge):\n");
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &graph[i][j]);
+
+    primMST(graph, n);
+
+    return 0;
+}
+************************************Krushkals Algorithm*********************************
+ #include <stdio.h>
+ #include <stdlib.h>
+ int comparator(const void* p1, const void* p2)
+ {
+ const int(*x)[3] = p1;
+ const int(*y)[3] = p2;
+ return (*x)[2]- (*y)[2];
+ }
+ void makeSet(int parent[], int rank[], int n)
+{
+ for (int i = 0; i < n; i++) {
+ parent[i] = i;
+ rank[i] = 0;
+ }
+ }
+ int findParent(int parent[], int component)
+ {
+ if (parent[component] == component)
+ return component;
+ return parent[component]
+ = findParent(parent, parent[component]);
+ }
+ void unionSet(int u, int v, int parent[], int rank[], int n)
+ {
+ u =findParent(parent, u);
+ v = findParent(parent, v);
+ if (rank[u] < rank[v]) {
+ parent[u] = v;
+ }
+ else if (rank[u] > rank[v]) {
+ parent[v] = u;
+ }
+ else {
+ }
+ }
+ parent[v] = u;
+ rank[u]++;
+ void kruskalAlgo(int n, int edge[n][3])
+ {
+ qsort(edge, n, sizeof(edge[0]), comparator);
+int parent[n];
+ int rank[n];
+ makeSet(parent, rank, n);
+ int minCost = 0;
+ printf(
+ "Following are the edges in the constructed MST\n");
+ for (int i = 0; i < n; i++) {
+ int v1 = findParent(parent, edge[i][0]);
+ int v2 = findParent(parent, edge[i][1]);
+ int wt = edge[i][2];
+ if (v1 != v2) {
+ unionSet(v1, v2, parent, rank, n);
+ minCost += wt;
+ printf("%d-- %d == %d\n", edge[i][0],
+ edge[i][1], wt);
+ }
+ }
+ printf("Minimum Cost Spanning Tree: %d\n", minCost);
+ }
+ int main()
+ {
+ int edge[5][3] = { { 0, 1, 10 },
+ { 0, 2, 6 },
+ { 0, 3, 5 },
+ { 1, 3, 15 },
+ { 2, 3, 4 } };
+ kruskalAlgo(5, edge);
+ return 0;
+}
+************************************Dijkstra's Algorithm********************************
+#include <limits.h>
+#include <stdbool.h>
+#include <stdio.h>
+
+#define V 9 // Number of vertices in the graph
+
+// Function to find the vertex with the minimum distance value
+int minDistance(int dist[], bool sptSet[]) {
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < V; v++) {
+        if (!sptSet[v] && dist[v] <= min) {
+            min = dist[v];
+            min_index = v;
+        }
+    }
+    return min_index;
+}
+
+// Function to print the constructed distance array
+void printSolution(int dist[]) {
+    printf("Vertex \t Distance from Source\n");
+    for (int i = 0; i < V; i++) {
+        printf("%d \t\t %d\n", i, dist[i]);
+    }
+}
+
+// Function that implements Dijkstra's shortest path algorithm
+void dijkstra(int graph[V][V], int src) {
+    int dist[V];  // Output array. dist[i] holds the shortest distance from src to i
+    bool sptSet[V]; // sptSet[i] is true if vertex i is included in the shortest path tree
+
+    // Initialize all distances as INFINITE and sptSet[] as false
+    for (int i = 0; i < V; i++) {
+        dist[i] = INT_MAX;
+        sptSet[i] = false;
+    }
+
+    dist[src] = 0; // Distance of source vertex from itself is always 0
+
+    // Find the shortest path for all vertices
+    for (int count = 0; count < V - 1; count++) {
+        int u = minDistance(dist, sptSet); // Pick the minimum distance vertex
+        sptSet[u] = true; // Mark the vertex as processed
+
+        // Update the distance value of the adjacent vertices
+        for (int v = 0; v < V; v++) {
+            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX &&
+                dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+            }
+        }
+    }
+
+    // Print the result
+    printSolution(dist);
+}
+
+// Driver code
+int main() {
+    int graph[V][V] = {
+        {0, 4, 0, 0, 0, 0, 0, 8, 0},
+        {4, 0, 8, 0, 0, 0, 0, 11, 0},
+        {0, 8, 0, 7, 0, 4, 0, 0, 2},
+        {0, 0, 7, 0, 9, 14, 0, 0, 0},
+        {0, 0, 0, 9, 0, 10, 0, 0, 0},
+        {0, 0, 4, 14, 10, 0, 2, 0, 0},
+        {0, 0, 0, 0, 0, 2, 0, 1, 6},
+        {8, 11, 0, 0, 0, 0, 1, 0, 7},
+        {0, 0, 2, 0, 0, 0, 6, 7, 0}
+    };
+
+    dijkstra(graph, 0);
+
+    return 0;
+}
+*****************************Travelling Salesperson Problem********************************
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX 9999
+#define N 4 // Number of cities
+
+// Distance matrix
+int distan[N][N] = {
+    {0, 22, 26, 30},
+    {30, 0, 45, 35},
+    {25, 45, 0, 60},
+    {30, 35, 40, 0}
+};
+
+// DP array to store minimum cost of visiting all cities
+int DP[32][8];
+
+// Function to find the minimum of two integers
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+// TSP function using Bitmasking and DP
+int TSP(int mask, int pos) {
+    int completed_visit = (1 << N) - 1;
+
+    // Base case: All cities visited, return cost to return to the start
+    if (mask == completed_visit) {
+        return distan[pos][0];
+    }
+
+    // Return already computed result to avoid redundant calculations
+    if (DP[mask][pos] != -1) {
+        return DP[mask][pos];
+    }
+
+    int answer = MAX;
+
+    // Try to go to any city that has not been visited
+    for (int city = 0; city < N; city++) {
+        if ((mask & (1 << city)) == 0) {
+            int newAnswer = distan[pos][city] + TSP(mask | (1 << city), city);
+            answer = min(answer, newAnswer);
+        }
+    }
+
+    return DP[mask][pos] = answer;
+}
+
+int main() {
+    // Initialize the DP array with -1
+    for (int i = 0; i < (1 << N); i++) {
+        for (int j = 0; j < N; j++) {
+            DP[i][j] = -1;
+        }
+    }
+
+    // Call TSP function with initial state
+    printf("Minimum Distance Travelled -> %d\n", TSP(1, 0));
+    return 0;
+}
+*********************************N-Queens Problem**************************************
+#include <stdio.h>
+#include <stdbool.h>
+
+#define N 4
+
+// Function to print the board
+void printSolution(int board[N][N]) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (board[i][j])
+                printf("Q ");
+            else
+                printf(". ");
+        }
+        printf("\n");
+    }
+}
+
+// Function to check if a queen can be placed at board[row][col]
+bool isSafe(int board[N][N], int row, int col) {
+    int i, j;
+
+    // Check this row on the left side
+    for (i = 0; i < col; i++)
+        if (board[row][i])
+            return false;
+
+    // Check upper diagonal on the left side
+    for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j])
+            return false;
+
+    // Check lower diagonal on the left side
+    for (i = row, j = col; j >= 0 && i < N; i++, j--)
+        if (board[i][j])
+            return false;
+
+    return true;
+}
+
+// Utility function to solve N-Queen problem using backtracking
+bool solveNQUtil(int board[N][N], int col) {
+    // Base case: If all queens are placed
+    if (col >= N)
+        return true;
+
+    // Try placing queen in all rows of current column
+    for (int i = 0; i < N; i++) {
+        if (isSafe(board, i, col)) {
+            board[i][col] = 1;  // Place queen
+
+            // Recur to place rest of the queens
+            if (solveNQUtil(board, col + 1))
+                return true;
+
+            board[i][col] = 0;  // Backtrack
+        }
+    }
+
+    return false; // If queen cannot be placed in any row
+}
+
+// Main function to solve N-Queens
+bool solveNQ() {
+    int board[N][N] = {
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 }
+    };
+
+    if (!solveNQUtil(board, 0)) {
+        printf("Solution does not exist\n");
+        return false;
+    }
+
+    printSolution(board);
+    return true;
+}
+
+// Driver code
+int main() {
+    solveNQ();
+    return 0;
+}
+************************************Graph Coloring Problem*********************************
+#include <stdbool.h>
+#include <stdio.h>
+
+#define V 4
+
+// Function to print the solution
+void printSolution(int color[]) {
+    printf("Solution Exists: Following are the assigned colors\n");
+    for (int i = 0; i < V; i++)
+        printf(" %d ", color[i]);
+    printf("\n");
+}
+
+// Function to check if the current color assignment is safe for vertex v
+bool isSafe(int v, bool graph[V][V], int color[], int c) {
+    for (int i = 0; i < V; i++)
+        if (graph[v][i] && c == color[i])
+            return false;
+    return true;
+}
+
+// Utility function to solve the graph coloring problem
+bool graphColoringUtil(bool graph[V][V], int m, int color[], int v) {
+    if (v == V)
+        return true;
+
+    for (int c = 1; c <= m; c++) {
+        if (isSafe(v, graph, color, c)) {
+            color[v] = c;
+
+            if (graphColoringUtil(graph, m, color, v + 1))
+                return true;
+
+            color[v] = 0; // Backtrack
+        }
+    }
+
+    return false;
+}
+
+// Function to solve the graph coloring problem using backtracking
+bool graphColoring(bool graph[V][V], int m) {
+    int color[V];
+    for (int i = 0; i < V; i++)
+        color[i] = 0;
+
+    if (!graphColoringUtil(graph, m, color, 0)) {
+        printf("Solution does not exist\n");
+        return false;
+    }
+
+    printSolution(color);
+    return true;
+}
+
+// Driver code
+int main() {
+    bool graph[V][V] = {
+        { 0, 1, 1, 1 },
+        { 1, 0, 1, 0 },
+        { 1, 1, 0, 1 },
+        { 1, 0, 1, 0 }
+    };
+
+    int m = 3; // Number of colors
+    graphColoring(graph, m);
+
+    return 0;
+}
+******************************AVL Tree(Insertion and Searching)****************************
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int key;
+    struct Node *left;
+    struct Node *right;
+    int height;
+};
+
+int getHeight(struct Node *n) {
+    return (n == NULL) ? 0 : n->height;
+}
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+struct Node* createNode(int key) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->key = key;
+    node->left = node->right = NULL;
+    node->height = 1;
+    return node;
+}
+
+int getBalance(struct Node* n) {
+    return (n == NULL) ? 0 : getHeight(n->left) - getHeight(n->right);
+}
+
+struct Node* rightRotate(struct Node* y) {
+    struct Node* x = y->left;
+    struct Node* T2 = x->right;
+    x->right = y;
+    y->left = T2;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+    return x;
+}
+
+struct Node* leftRotate(struct Node* x) {
+    struct Node* y = x->right;
+    struct Node* T2 = y->left;
+    y->left = x;
+    x->right = T2;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+    return y;
+}
+
+struct Node* insert(struct Node* node, int key) {
+    if (node == NULL)
+        return createNode(key);
+    if (key < node->key)
+        node->left = insert(node->left, key);
+    else if (key > node->key)
+        node->right = insert(node->right, key);
+    else
+        return node;
+
+    node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+    int bf = getBalance(node);
+
+    if (bf > 1 && key < node->left->key)
+        return rightRotate(node);
+    if (bf < -1 && key > node->right->key)
+        return leftRotate(node);
+    if (bf > 1 && key > node->left->key) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+    if (bf < -1 && key < node->right->key) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+
+    return node;
+}
+
+struct Node* search(struct Node* root, int key) {
+    if (root == NULL || root->key == key)
+        return root;
+    if (key < root->key)
+        return search(root->left, key);
+    return search(root->right, key);
+}
+
+void preOrder(struct Node* root) {
+    if (root != NULL) {
+        printf("%d ", root->key);
+        preOrder(root->left);
+        preOrder(root->right);
+    }
+}
+
+int main() {
+    struct Node* root = NULL;
+    int keys[] = {10, 20, 30, 40, 50, 25};
+    for (int i = 0; i < 6; i++)
+        root = insert(root, keys[i]);
+
+    printf("Preorder traversal: ");
+    preOrder(root);
+
+    int toFind = 25;
+    struct Node* result = search(root, toFind);
+    if (result)
+        printf("\n%d found in the tree.\n", toFind);
+    else
+        printf("\n%d not found in the tree.\n", toFind);
+
+    return 0;
+}
+***********************************AVL Tree(Insertion and Deletion)*************************
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int key;
+    struct Node *left, *right;
+    int height;
+};
+
+int getHeight(struct Node* node) {
+    return node ? node->height : 0;
+}
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+struct Node* createNode(int key) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->key = key;
+    node->left = node->right = NULL;
+    node->height = 1;
+    return node;
+}
+
+int getBalance(struct Node* node) {
+    return node ? getHeight(node->left) - getHeight(node->right) : 0;
+}
+
+struct Node* rightRotate(struct Node* y) {
+    struct Node* x = y->left;
+    struct Node* T2 = x->right;
+    x->right = y;
+    y->left = T2;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+    return x;
+}
+
+struct Node* leftRotate(struct Node* x) {
+    struct Node* y = x->right;
+    struct Node* T2 = y->left;
+    y->left = x;
+    x->right = T2;
+    x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+    y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+    return y;
+}
+
+struct Node* insert(struct Node* node, int key) {
+    if (node == NULL)
+        return createNode(key);
+    if (key < node->key)
+        node->left = insert(node->left, key);
+    else if (key > node->key)
+        node->right = insert(node->right, key);
+    else
+        return node;
+
+    node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+    int bf = getBalance(node);
+
+    if (bf > 1 && key < node->left->key)
+        return rightRotate(node);
+    if (bf < -1 && key > node->right->key)
+        return leftRotate(node);
+    if (bf > 1 && key > node->left->key) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+    if (bf < -1 && key < node->right->key) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+
+    return node;
+}
+
+struct Node* minValueNode(struct Node* node) {
+    struct Node* current = node;
+    while (current->left != NULL)
+        current = current->left;
+    return current;
+}
+
+struct Node* deleteNode(struct Node* root, int key) {
+    if (root == NULL)
+        return root;
+    if (key < root->key)
+        root->left = deleteNode(root->left, key);
+    else if (key > root->key)
+        root->right = deleteNode(root->right, key);
+    else {
+        if (root->left == NULL || root->right == NULL) {
+            struct Node* temp = root->left ? root->left : root->right;
+            if (temp == NULL) {
+                temp = root;
+                root = NULL;
+            } else
+                *root = *temp;
+            free(temp);
+        } else {
+            struct Node* temp = minValueNode(root->right);
+            root->key = temp->key;
+            root->right = deleteNode(root->right, temp->key);
+        }
+    }
+
+    if (root == NULL)
+        return root;
+
+    root->height = 1 + max(getHeight(root->left), getHeight(root->right));
+    int bf = getBalance(root);
+
+    if (bf > 1 && getBalance(root->left) >= 0)
+        return rightRotate(root);
+    if (bf > 1 && getBalance(root->left) < 0) {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+    if (bf < -1 && getBalance(root->right) <= 0)
+        return leftRotate(root);
+    if (bf < -1 && getBalance(root->right) > 0) {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+
+    return root;
+}
+
+void preOrder(struct Node* root) {
+    if (root != NULL) {
+        printf("%d ", root->key);
+        preOrder(root->left);
+        preOrder(root->right);
+    }
+}
+
+int main() {
+    struct Node* root = NULL;
+    int keys[] = {20, 10, 30, 5, 15, 25, 35};
+
+    for (int i = 0; i < 7; i++)
+        root = insert(root, keys[i]);
+
+    printf("Preorder before deletion: ");
+    preOrder(root);
+
+    root = deleteNode(root, 10);
+
+    printf("\nPreorder after deleting 10: ");
+    preOrder(root);
+
+    return 0;
+}
+*************************************Splay(Insertion and Searching)****************************
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *leftChild, *rightChild;
+};
+
+struct node* newNode(int data) {
+    struct node* Node = (struct node*)malloc(sizeof(struct node));
+    Node->data = data;
+    Node->leftChild = Node->rightChild = NULL;
+    return Node;
+}
+
+struct node* rightRotate(struct node *x) {
+    struct node *y = x->leftChild;
+    x->leftChild = y->rightChild;
+    y->rightChild = x;
+    return y;
+}
+
+struct node* leftRotate(struct node *x) {
+    struct node *y = x->rightChild;
+    x->rightChild = y->leftChild;
+    y->leftChild = x;
+    return y;
+}
+
+struct node* splay(struct node *root, int data) {
+    if (root == NULL || root->data == data)
+        return root;
+
+    if (root->data > data) {
+        if (root->leftChild == NULL) return root;
+        if (root->leftChild->data > data) {
+            root->leftChild->leftChild = splay(root->leftChild->leftChild, data);
+            root = rightRotate(root);
+        } else if (root->leftChild->data < data) {
+            root->leftChild->rightChild = splay(root->leftChild->rightChild, data);
+            if (root->leftChild->rightChild != NULL)
+                root->leftChild = leftRotate(root->leftChild);
+        }
+        return (root->leftChild == NULL) ? root : rightRotate(root);
+    } else {
+        if (root->rightChild == NULL) return root;
+        if (root->rightChild->data > data) {
+            root->rightChild->leftChild = splay(root->rightChild->leftChild, data);
+            if (root->rightChild->leftChild != NULL)
+                root->rightChild = rightRotate(root->rightChild);
+        } else if (root->rightChild->data < data) {
+            root->rightChild->rightChild = splay(root->rightChild->rightChild, data);
+            root = leftRotate(root);
+        }
+        return (root->rightChild == NULL) ? root : leftRotate(root);
+    }
+}
+
+struct node* insert(struct node *root, int key) {
+    if (root == NULL)
+        return newNode(key);
+    root = splay(root, key);
+    if (root->data == key)
+        return root;
+
+    struct node* newnode = newNode(key);
+    if (key < root->data) {
+        newnode->rightChild = root;
+        newnode->leftChild = root->leftChild;
+        root->leftChild = NULL;
+    } else {
+        newnode->leftChild = root;
+        newnode->rightChild = root->rightChild;
+        root->rightChild = NULL;
+    }
+    return newnode;
+}
+
+struct node* search(struct node* root, int key) {
+    return splay(root, key);
+}
+
+void inorder(struct node *root) {
+    if (root == NULL) return;
+    inorder(root->leftChild);
+    printf("%d ", root->data);
+    inorder(root->rightChild);
+}
+
+int main() {
+    struct node* root = NULL;
+    int arr[] = {100, 50, 200, 40, 60, 150};
+    for (int i = 0; i < 6; i++) {
+        root = insert(root, arr[i]);
+    }
+
+    printf("Inorder after insertions: ");
+    inorder(root);
+
+    int key = 60;
+    root = search(root, key);
+    printf("\nAfter searching %d (splaying to root): %d\n", key, root->data);
+
+    return 0;
+}
+************************************Splay Tree(Insertion and Deletion)**********************
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *leftChild, *rightChild;
+};
+
+struct node* newNode(int data) {
+    struct node* Node = (struct node*)malloc(sizeof(struct node));
+    Node->data = data;
+    Node->leftChild = Node->rightChild = NULL;
+    return Node;
+}
+
+struct node* rightRotate(struct node *x) {
+    struct node *y = x->leftChild;
+    x->leftChild = y->rightChild;
+    y->rightChild = x;
+    return y;
+}
+
+struct node* leftRotate(struct node *x) {
+    struct node *y = x->rightChild;
+    x->rightChild = y->leftChild;
+    y->leftChild = x;
+    return y;
+}
+
+struct node* splay(struct node *root, int data) {
+    if (root == NULL || root->data == data)
+        return root;
+
+    if (root->data > data) {
+        if (root->leftChild == NULL) return root;
+        if (root->leftChild->data > data) {
+            root->leftChild->leftChild = splay(root->leftChild->leftChild, data);
+            root = rightRotate(root);
+        } else if (root->leftChild->data < data) {
+            root->leftChild->rightChild = splay(root->leftChild->rightChild, data);
+            if (root->leftChild->rightChild != NULL)
+                root->leftChild = leftRotate(root->leftChild);
+        }
+        return (root->leftChild == NULL) ? root : rightRotate(root);
+    } else {
+        if (root->rightChild == NULL) return root;
+        if (root->rightChild->data > data) {
+            root->rightChild->leftChild = splay(root->rightChild->leftChild, data);
+            if (root->rightChild->leftChild != NULL)
+                root->rightChild = rightRotate(root->rightChild);
+        } else if (root->rightChild->data < data) {
+            root->rightChild->rightChild = splay(root->rightChild->rightChild, data);
+            root = leftRotate(root);
+        }
+        return (root->rightChild == NULL) ? root : leftRotate(root);
+    }
+}
+
+struct node* insert(struct node *root, int key) {
+    if (root == NULL)
+        return newNode(key);
+    root = splay(root, key);
+    if (root->data == key)
+        return root;
+
+    struct node* newnode = newNode(key);
+    if (key < root->data) {
+        newnode->rightChild = root;
+        newnode->leftChild = root->leftChild;
+        root->leftChild = NULL;
+    } else {
+        newnode->leftChild = root;
+        newnode->rightChild = root->rightChild;
+        root->rightChild = NULL;
+    }
+    return newnode;
+}
+
+struct node* delete(struct node* root, int key) {
+    if (root == NULL)
+        return NULL;
+    root = splay(root, key);
+    if (root->data != key)
+        return root;  // Key not found
+
+    struct node* temp;
+    if (root->leftChild == NULL) {
+        temp = root->rightChild;
+    } else {
+        temp = splay(root->leftChild, key);
+        temp->rightChild = root->rightChild;
+    }
+    free(root);
+    return temp;
+}
+
+void inorder(struct node *root) {
+    if (root == NULL) return;
+    inorder(root->leftChild);
+    printf("%d ", root->data);
+    inorder(root->rightChild);
+}
+
+int main() {
+    struct node* root = NULL;
+    int arr[] = {30, 10, 50, 20, 40, 60};
+    for (int i = 0; i < 6; i++)
+        root = insert(root, arr[i]);
+
+    printf("Inorder before deletion: ");
+    inorder(root);
+
+    root = delete(root, 50);
+
+    printf("\nInorder after deleting 50: ");
+    inorder(root);
+
+    return 0;
+}
+
+*******************************KMP Algorithm***********************************************
+#include <stdio.h>
+#include <string.h>
+
+void computeLPS(char *pattern, int M, int *lps) {
+    int len = 0;
+    lps[0] = 0;
+    int i = 1;
+    while (i < M) {
+        if (pattern[i] == pattern[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        } else {
+            if (len != 0) {
+                len = lps[len - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+}
+
+void KMPSearch(char *text, char *pattern) {
+    int N = strlen(text);
+    int M = strlen(pattern);
+    int lps[M];
+    computeLPS(pattern, M, lps);
+    int i = 0;
+    int j = 0;
+    while (i < N) {
+        if (pattern[j] == text[i]) {
+            i++;
+            j++;
+        }
+        if (j == M) {
+            printf("Pattern found at index %d\n", i - j);
+            j = lps[j - 1];
+        } else if (i < N && pattern[j] != text[i]) {
+            if (j != 0)
+                j = lps[j - 1];
+            else
+                i++;
+        }
+    }
+}
+
+int main() {
+    char text[] = "ABABDABACCAABDCDDEEPUABABCABAB";
+    char pattern[] = "DEEPU";
+    printf("Text: %s\n", text);
+    printf("Pattern: %s\n", pattern);
+    printf("Pattern matching using KMP algorithm:\n");
+    KMPSearch(text, pattern);
+    return 0;
+}
+**********************************RK Algorithm******************************************
+#include <stdio.h>
+#include <string.h>
+#define d 256
+#define q 101
+
+void RabinKarpSearch(char *text, char *pattern) {
+    int M = strlen(pattern);
+    int N = strlen(text);
+    int i, j;
+    int p = 0;
+    int t = 0;
+    int h = 1;
+
+    for (i = 0; i < M - 1; i++)
+        h = (h * d) % q;
+
+    for (i = 0; i < M; i++) {
+        p = (d * p + pattern[i]) % q;
+        t = (d * t + text[i]) % q;
+    }
+
+    for (i = 0; i <= N - M; i++) {
+        if (p == t) {
+            for (j = 0; j < M; j++) {
+                if (text[i + j] != pattern[j])
+                    break;
+            }
+            if (j == M)
+                printf("Pattern found at index %d\n", i);
+        }
+
+        if (i < N - M) {
+            t = (d * (t - text[i] * h) + text[i + M]) % q;
+            if (t < 0)
+                t = (t + q);
+        }
+    }
+}
+
+int main() {
+    char text[] = "ABAAABDCDLUFFYABAABAB";
+    char pattern[] = "LUFFY";
+    printf("Text: %s\n", text);
+    printf("Pattern: %s\n", pattern);
+    printf("Pattern matching using Rabin-Karp algorithm:\n");
+    RabinKarpSearch(text, pattern);
+    return 0;
+}
+*********************************************************************************
